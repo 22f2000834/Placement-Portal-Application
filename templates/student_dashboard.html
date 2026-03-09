@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+
+<style>
+  .page {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 16px 60px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e6e6e6;
+    margin-bottom: 16px;
+  }
+
+  .topbar .title { font-size: 22px; font-weight: 700; }
+
+  .topbar .links a {
+    font-size: 14px;
+    color: #2f6fed;
+    text-decoration: none;
+    margin-left: 12px;
+  }
+
+  h2 { font-size: 18px; margin: 20px 0 10px; }
+
+  .section-box {
+    border: 2px solid #d6d6d6;
+    border-radius: 10px;
+    padding: 10px;
+    background: #fff;
+  }
+
+  .list-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border: 2px solid #e3e3e3;
+    border-radius: 8px;
+    margin: 6px 0;
+    background: #fafafa;
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 2px solid #2f6fed;
+    background: #eaf2ff;
+    color: #2f6fed;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .table-wrap {
+    border: 2px solid #d6d6d6;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    background: #f3f3f3;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 13px;
+    border-bottom: 2px solid #ddd;
+  }
+
+  tbody td {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid #eee;
+    color: #444;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  .flash { padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; font-weight: 600; }
+  .flash.success { background: #e6ffe6; border: 1px solid #20a020; color: #20a020; }
+  .flash.error   { background: #ffe5e5; border: 1px solid #cc0000; color: #cc0000; }
+</style>
+
+<div class="page">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="topbar">
+    <div class="title">Welcome {{ session.get('name') }}</div>
+    <div class="links">
+      <a href="{{ url_for('stud_edit_profile') }}">edit profile</a>
+      <a href="{{ url_for('stud_history') }}">History</a>
+    </div>
+  </div>
+
+  <!-- Organizations -->
+  <h2>Organizations</h2>
+  <div class="section-box">
+    {% if companies %}
+      {% for comp in companies %}
+        <div class="list-row">
+          <span>{{ comp.company_name }}</span>
+          <a href="{{ url_for('stud_view_company', company_id=comp.id) }}" class="btn">view details</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No organizations with open drives right now.</p>
+    {% endif %}
+  </div>
+
+  <!-- Applied Drives -->
+  <h2>Applied Drives</h2>
+  {% if my_applications %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Sr No.</th>
+            <th>Drive Name</th>
+            <th>Company</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for app in my_applications %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ app.drive.job_title }}</td>
+              <td>{{ app.drive.company.company_name }}</td>
+              <td>{{ app.applied_at.strftime('%d/%m/%Y') }}</td>
+              <td>{{ app.status | capitalize }}</td>
+              <td><a href="{{ url_for('stud_view_drive', drive_id=app.drive_id) }}" class="btn">view details</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>No drives applied yet.</p>
+  {% endif %}
+
+</div>
+
+{% endblock %}

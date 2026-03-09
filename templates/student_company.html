@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}{{ company.company_name }}{% endblock %}
+
+{% block content %}
+
+<style>
+  .page {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 16px 60px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e6e6e6;
+    margin-bottom: 16px;
+  }
+
+  .topbar .title { font-size: 22px; font-weight: 700; }
+
+  .topbar .links a {
+    font-size: 14px;
+    color: #2f6fed;
+    text-decoration: none;
+    margin-left: 12px;
+  }
+
+  h2 { font-size: 18px; margin: 20px 0 10px; }
+
+  .overview-box {
+    border: 2px solid #d6d6d6;
+    border-radius: 10px;
+    padding: 16px;
+    background: #fff;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+  }
+
+  .overview-box h3 { margin: 0 0 8px; font-size: 16px; }
+
+  .section-box {
+    border: 2px solid #d6d6d6;
+    border-radius: 10px;
+    padding: 10px;
+    background: #fff;
+  }
+
+  .list-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border: 2px solid #e3e3e3;
+    border-radius: 8px;
+    margin: 6px 0;
+    background: #fafafa;
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 2px solid #2f6fed;
+    background: #eaf2ff;
+    color: #2f6fed;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+</style>
+
+<div class="page">
+
+  <div class="topbar">
+    <div class="title">{{ company.company_name }}</div>
+    <div class="links">
+      <a href="{{ url_for('stud_history') }}">History</a>
+    </div>
+  </div>
+
+  <div class="overview-box">
+    <h3>Overview</h3>
+    <p>{{ company.company_description }}</p>
+  </div>
+
+  <h2>Current Drives</h2>
+  <div class="section-box">
+    {% if drives %}
+      {% for drive in drives %}
+        <div class="list-row">
+          <span>{{ drive.job_title }}</span>
+          <a href="{{ url_for('stud_view_drive', drive_id=drive.id) }}" class="btn">view details</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No active drives from this company.</p>
+    {% endif %}
+  </div>
+
+  <br>
+  <a href="{{ url_for('student_dashboard') }}" class="btn">Back</a>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Create Drive{% endblock %}
+
+{% block content %}
+
+<style>
+  .form-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+
+  textarea {
+    height: 100px;
+  }
+
+  .btn {
+    margin-top: 20px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 2px solid green;
+    background: #eaffea;
+    color: green;
+    font-weight: bold;
+    cursor: pointer;
+  }
+</style>
+
+<div class="form-container">
+  <h2>Create a Drive</h2>
+
+  <form method="POST" action="{{ url_for('create_drive') }}">
+    
+
+
+    <label>Job Title</label>
+    <input type="text" name="job_title" required>
+
+    <label>Job Description</label>
+    <textarea name="job_description" required></textarea>
+
+    <label>Eligibility Criteria</label>
+    <input type="text" name="eligibility_criteria" required>
+
+    <label>Application Deadline</label>
+    <input type="date" name="application_deadline" required>
+
+    <button type="submit" class="btn">Save</button>
+  </form>
+</div>
+
+{% endblock %}

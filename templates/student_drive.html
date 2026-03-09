@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}{{ drive.job_title }}{% endblock %}
+
+{% block content %}
+
+<style>
+  .page {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 16px 60px;
+  }
+
+  .drive-card {
+    border: 2px solid #d6d6d6;
+    border-radius: 10px;
+    padding: 24px;
+    background: #fff;
+    display: flex;
+    gap: 30px;
+  }
+
+  .drive-left { flex: 1; }
+
+  .drive-right {
+    width: 160px;
+    border-left: 2px solid #e6e6e6;
+    padding-left: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .drive-card h2 { font-size: 20px; margin: 0 0 16px; }
+
+  .label { font-weight: 700; font-size: 14px; margin-top: 12px; }
+  .value { font-size: 14px; color: #555; margin-top: 4px; }
+
+  .bottom { display: flex; gap: 12px; margin-top: 20px; }
+
+  .btn {
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: 2px solid #2f6fed;
+    background: #eaf2ff;
+    color: #2f6fed;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .btn-grey {
+    border-color: #bbb;
+    background: #f0f0f0;
+    color: #999;
+  }
+
+  .flash { padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; font-weight: 600; }
+  .flash.success { background: #e6ffe6; border: 1px solid #20a020; color: #20a020; }
+  .flash.error   { background: #ffe5e5; border: 1px solid #cc0000; color: #cc0000; }
+</style>
+
+<div class="page">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="drive-card">
+    <div class="drive-left">
+      <h2>{{ drive.job_title }}</h2>
+
+      <div class="label">Job Title</div>
+      <div class="value">{{ drive.job_title }}</div>
+
+      <div class="label">Job Description</div>
+      <div class="value">{{ drive.job_description }}</div>
+
+      <div class="label">Eligibility</div>
+      <div class="value">{{ drive.eligibility_criteria }}</div>
+
+      <div class="label">Application Deadline</div>
+      <div class="value">{{ drive.application_deadline.strftime('%d %b %Y') }}</div>
+    </div>
+
+    <div class="drive-right">
+      {{ drive.company.company_name }}
+    </div>
+  </div>
+
+  <div class="bottom">
+    {% if already_applied %}
+      <span class="btn btn-grey">Already Applied</span>
+    {% else %}
+      <a href="{{ url_for('apply_drive', drive_id=drive.id) }}" class="btn">Apply</a>
+    {% endif %}
+    <a href="{{ url_for('stud_view_company', company_id=drive.company_id) }}" class="btn">Go Back</a>
+  </div>
+
+</div>
+
+{% endblock %}

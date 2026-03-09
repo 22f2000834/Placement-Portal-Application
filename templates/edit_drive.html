@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Edit Drive{% endblock %}
+
+{% block content %}
+<style>
+  .form-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+  }
+
+  h2 { margin-bottom: 20px; }
+
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+
+  textarea { height: 100px; }
+
+  .btn {
+    margin-top: 20px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 2px solid #2f6fed;
+    background: #eaf2ff;
+    color: #2f6fed;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .flash { padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; font-weight: 600; }
+  .flash.success { background: #e6ffe6; border: 1px solid #20a020; color: #20a020; }
+  .flash.error   { background: #ffe5e5; border: 1px solid #cc0000; color: #cc0000; }
+</style>
+
+<div class="form-container">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <h2>Edit Drive</h2>
+
+  <form method="POST">
+    <label>Job Title</label>
+    <input type="text" name="job_title" value="{{ drive.job_title }}" required>
+
+    <label>Job Description</label>
+    <textarea name="job_description" required>{{ drive.job_description }}</textarea>
+
+    <label>Eligibility Criteria</label>
+    <input type="text" name="eligibility_criteria" value="{{ drive.eligibility_criteria }}" required>
+
+    <label>Application Deadline</label>
+    <input type="date" name="application_deadline" value="{{ drive.application_deadline.strftime('%Y-%m-%d') }}" required>
+
+    <br>
+    <button type="submit" class="btn">save changes</button>
+    &nbsp;
+    <a href="{{ url_for('company_dashboard') }}" class="btn">cancel</a>
+  </form>
+
+</div>
+{% endblock %}

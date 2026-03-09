@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}Company Dashboard{% endblock %}
+
+{% block content %}
+<style>
+  .page { max-width: 1000px; margin: 30px auto; padding: 0 16px; }
+
+  .header {
+    border: 2px solid #cfcfcf;
+    background: #fff;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+  }
+  .header .welcome { font-size: 28px; font-weight: 700; }
+
+  .section-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 18px 0 10px;
+  }
+  .section-top h2 { margin: 0; font-size: 34px; font-weight: 500; }
+
+  .btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background: #eee;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-blue { background: #eaf2ff; border-color: #2f6fed; color: #2f6fed; }
+  .btn-green { background: #eaffea; border-color: #20a020; color: #20a020; }
+  .btn-red   { background: #ffecec; border-color: #ff4d4d; color: #ff4d4d; }
+  .btn-grey  { background: #e6e6e6; border-color: #666;    color: #666;    }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid transparent;
+  }
+  .badge-review   { background: #fff8e1; border-color: #f0a500; color: #b37700; }
+  .badge-approved { background: #eaffea; border-color: #20a020; color: #20a020; }
+  .badge-rejected { background: #ffecec; border-color: #ff4d4d; color: #ff4d4d; }
+
+
+  .table-wrap {
+    border: 2px solid #cfcfcf;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    text-align: left;
+    padding: 14px;
+    border-bottom: 2px solid #cfcfcf;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  tbody td {
+    padding: 16px 14px;
+    border-bottom: 1px solid #e9e9e9;
+    font-size: 18px;
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .actions {
+    display: flex;
+    gap: 14px;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+
+  .spacer { height: 22px; }
+</style>
+
+<div class="page">
+
+  <div class="header">
+    <div class="welcome">Welcome {{ session.get('name', 'Organization') }}</div>
+  </div>
+
+  {% if company %}
+  <div style="font-size: 14px; color: #666; margin-top: 6px;">
+    {{ company.company_description }} &nbsp;|&nbsp;
+    <a href="#" >{{ company.company_website }}</a>
+
+  </div>
+  {% endif %}
+
+
+  <div class="section-top">
+    <h3>Upcoming Drives</h3>
+    <a class="btn btn-green" href="{{ url_for('create_drive') }}">Create Drive</a>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:140px;">Sr No.</th>
+          <th>Drive Name</th>
+          <th style="width:420px; text-align:right;">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% if drives %}
+          {% for dr in drives %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ dr.job_title }}</td>
+              <td>
+                {% if dr.verified == 'Approved' %}
+                  <span class="badge badge-approved">Approved</span>
+                {% elif dr.verified == 'Rejected' %}
+                  <span class="badge badge-rejected">Rejected</span>
+                {% else %}
+                  <span class="badge badge-review">In Review</span>
+                {% endif %}
+              </td>
+              <td style="text-align:right;">
+                <div class="actions">
+                  <a class="btn btn-blue" href="{{ url_for('compview_drive', drive_id=dr.id) }}">view</a>
+                  <a class="btn btn-blue" href="{{ url_for('comp_view_applicants', drive_id=dr.id) }}">applicants ({{ dr.applications|length }})</a>
+                  <a class="btn btn-green" href="{{ url_for('edit_drive', drive_id=dr.id) }}">edit</a>
+                  <a class="btn btn-grey" href="{{ url_for('close_drive', drive_id=dr.id) }}">close</a>
+                  <a class="btn btn-red" href="{{ url_for('delete_drive', drive_id=dr.id) }}">delete</a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="4">No upcoming drives yet.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="spacer"></div>
+
+
+  <div class="section-top">
+    <h3>Closed Drives</h3>
+    <div></div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:140px;">Sr No.</th>
+          <th>Drive Name</th>
+          <th style="width:300px; text-align:right;">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% if closed_drives %}
+          {% for dr in closed_drives %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ dr.job_title }}</td>
+              <td style="text-align:right;">
+                <div class="actions">
+                  <a class="btn btn-green" href="{{ url_for('reopen_drive', drive_id=dr.id) }}">reopen</a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="3">No closed drives yet.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

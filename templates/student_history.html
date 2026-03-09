@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Application History{% endblock %}
+
+{% block content %}
+
+<style>
+  .page {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 16px 60px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .header h2 { font-size: 20px; margin: 0 0 6px; }
+  .header p  { font-size: 14px; color: #555; margin: 2px 0; }
+
+  .btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 2px solid #2f6fed;
+    background: #eaf2ff;
+    color: #2f6fed;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .table-wrap {
+    border: 2px solid #d6d6d6;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    background: #f3f3f3;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 13px;
+    border-bottom: 2px solid #ddd;
+  }
+
+  tbody td {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid #eee;
+    color: #444;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+</style>
+
+<div class="page">
+
+  <div class="header">
+    <div>
+      <h2>Student Application History</h2>
+      {% if student %}
+        <p>Student Name: {{ student.f_name }} {{ student.l_name }}</p>
+        <p>Department: {{ student.department }}</p>
+      {% endif %}
+    </div>
+    <a href="{{ url_for('student_dashboard') }}" class="btn">back</a>
+  </div>
+
+  {% if applications %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Drive No.</th>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Applied On</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for app in applications %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ app.drive.job_title }}</td>
+              <td>{{ app.drive.company.company_name }}</td>
+              <td>{{ app.applied_at.strftime('%d/%m/%Y') }}</td>
+              <td>{{ app.status | capitalize }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p style="color: #999; font-size: 14px;">No application history yet.</p>
+  {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}View Drive{% endblock %}
+
+{% block content %}
+<style>
+  .drive-page {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #f5f7fb;
+  }
+
+  .drive-card {
+    width: 900px;
+    background: #fff;
+    border: 2px solid #cfcfcf;
+    border-radius: 12px;
+    padding: 30px;
+  }
+
+  .drive-content {
+    display: flex;
+    gap: 30px;
+    min-height: 320px;
+  }
+
+  .drive-left { flex: 1; }
+  .drive-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .drive-divider {
+    width: 2px;
+    background: #d7d7d7;
+  }
+
+  .drive-title {
+    margin: 0 0 18px;
+    font-size: 32px;
+    font-weight: 800;
+  }
+
+  .label {
+    font-weight: 700;
+    margin-top: 14px;
+  }
+
+  .value {
+    margin-top: 6px;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .company-name {
+    font-size: 28px;
+    font-weight: 800;
+    color: #333;
+    text-align: center;
+  }
+
+  .drive-bottom {
+    text-align: center;
+    margin-top: 26px;
+  }
+
+  .btn-link {
+    padding: 10px 25px;
+    border-radius: 8px;
+    border: 2px solid #2f6fed;
+    background: #eaf2ff;
+    color: #2f6fed;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-link:hover {
+    background: #dbe9ff;
+  }
+</style>
+
+<div class="drive-page">
+  <div class="drive-card">
+
+    <div class="drive-content">
+
+      <!-- LEFT -->
+      <div class="drive-left">
+        
+
+        <div class="label">Job Title</div>
+        <div class="value">{{ dr_id.job_title }}</div>
+
+        <div class="label">Job Description</div>
+        <div class="value">{{ dr_id.job_description }}</div>
+
+        <div class="label">Eligibility</div>
+        <div class="value">{{ dr_id.eligibility_criteria }}</div>
+
+        <div class="label">Application Deadline</div>
+        <div class="value">{{ dr_id.application_deadline }}</div>
+      </div>
+
+      <div class="drive-divider"></div>
+
+      <!-- RIGHT -->
+      <div class="drive-right">
+        <div class="company-name">
+          {{ dr_id.company.company_name }}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="drive-bottom">
+      <a href="{{ url_for('admin_dashboard') }}" class="btn-link">Go Back</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

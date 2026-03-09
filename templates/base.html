@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Placement Portal{% endblock %}</title>
+</head>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50;
+    padding: 15px 30px;
+}
+
+.logo {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 16px;
+    transition: 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #1abc9c;
+}
+
+.site-footer {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+</style>
+
+<body>
+    <nav class="nav-bar">
+        <div class="logo">Placement Portal Application</div>
+        <div class="nav-links">
+
+            {% if not session.get('role') %}
+                <a href="{{ url_for('companyReg') }}">Company Reg</a>
+                <a href="{{ url_for('studentReg') }}">Student Reg</a>
+                <a href="{{ url_for('login')}}">LOGIN</a>
+            {% elif session.get('role') == 'Student' %}
+                <a href="{{ url_for('logout')}}">LOGOUT</a>
+            {% elif session.get('role') == 'Company' %}
+                <a href="{{ url_for('logout')}}">LOGOUT</a>
+            {% elif session.get('role') == 'admin' %}
+                <a href="{{ url_for('logout')}}">LOGOUT</a>
+            {% endif %}
+            
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Placement Portal Application. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

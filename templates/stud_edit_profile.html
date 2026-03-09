@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+
+<style>
+  .page {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 0 16px 60px;
+  }
+
+  h2 { font-size: 20px; margin: 0 0 16px; }
+
+  .form-box {
+    border: 2px solid #d6d6d6;
+    border-radius: 10px;
+    padding: 20px;
+    background: #fff;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 5px;
+    color: #555;
+  }
+
+  input {
+    width: 100%;
+    padding: 9px 10px;
+    margin-bottom: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  input:focus { outline: none; border-color: #2f6fed; }
+
+  .resume-info { font-size: 13px; color: #666; margin-bottom: 10px; }
+
+  .btn {
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: 2px solid #2f6fed;
+    background: #eaf2ff;
+    color: #2f6fed;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .flash { padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; font-weight: 600; }
+  .flash.success { background: #e6ffe6; border: 1px solid #20a020; color: #20a020; }
+  .flash.error   { background: #ffe5e5; border: 1px solid #cc0000; color: #cc0000; }
+</style>
+
+<div class="page">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <h2>Edit Profile</h2>
+
+  <div class="form-box">
+    <form method="POST" enctype="multipart/form-data">
+
+      <label>First Name</label>
+      <input type="text" name="f_name" value="{{ student.f_name }}" required>
+
+      <label>Last Name</label>
+      <input type="text" name="l_name" value="{{ student.l_name }}" required>
+
+      <label>Department</label>
+      <input type="text" name="department" value="{{ student.department }}" required>
+
+      <label>CGPA</label>
+      <input type="text" name="cgpa" value="{{ student.cgpa }}" required>
+
+      <label>Batch Year</label>
+      <input type="text" name="batch_year" value="{{ student.batch_year }}" required>
+
+      <label>Upload Resume</label>
+      {% if student.resume %}
+        <div class="resume-info">current file: {{ student.resume }}</div>
+      {% endif %}
+      <input type="file" name="resume" accept=".pdf,.doc,.docx">
+
+      <br>
+      <button type="submit" class="btn">save changes</button>
+      &nbsp;
+      <a href="{{ url_for('student_dashboard') }}" class="btn">cancel</a>
+
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Applicants - {{ drive.job_title }}{% endblock %}
+
+{% block content %}
+<style>
+  .page {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 16px 60px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e6e6e6;
+  }
+
+  .header h2 { font-size: 20px; margin: 0; }
+
+  .btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 2px solid #2f6fed;
+    background: #eaf2ff;
+    color: #2f6fed;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .btn-green { border-color: #20a020; background: #eaffea; color: #20a020; }
+  .btn-red   { border-color: #ff4d4d; background: #ffecec; color: #ff4d4d; }
+  .btn-grey  { border-color: #999; background: #f0f0f0; color: #666; }
+
+  .table-wrap {
+    border: 2px solid #d6d6d6;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    background: #f3f3f3;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 13px;
+    border-bottom: 2px solid #ddd;
+  }
+
+  tbody td {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid #eee;
+    color: #444;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .flash { padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; font-weight: 600; }
+  .flash.success { background: #e6ffe6; border: 1px solid #20a020; color: #20a020; }
+  .flash.error   { background: #ffe5e5; border: 1px solid #cc0000; color: #cc0000; }
+</style>
+
+<div class="page">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="header">
+    <h2>Applicants — {{ drive.job_title }}</h2>
+    <a href="{{ url_for('company_dashboard') }}" class="btn">back</a>
+  </div>
+
+  {% if applications %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Sr No.</th>
+            <th>Student Name</th>
+            <th>Department</th>
+            <th>CGPA</th>
+            <th>Applied On</th>
+            <th>Status</th>
+            <th>Resume</th>
+            <th>Actions</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          {% for app in applications %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ app.student.f_name }} {{ app.student.l_name }}</td>
+              <td>{{ app.student.department }}</td>
+              <td>{{ app.student.cgpa }}</td>
+              <td>{{ app.applied_at.strftime('%d/%m/%Y') }}</td>
+              <td>{{ app.status | capitalize }}</td>
+              <td>
+                    {% if app.student.resume %}
+                        <a href="/static/resumes/{{ app.student.resume }}" target="_blank" class="btn">view</a>
+                    {% else %}
+                        <span style="color:#999;">none</span>
+                    {% endif %}
+              </td>
+              <td>              
+                <div class="actions">
+                    {% if app.status == 'applied' %}
+                    <a href="{{ url_for('update_app_status', app_id=app.id, status='Shortlisted') }}" class="btn btn-green">shortlist</a>
+                    <a href="{{ url_for('update_app_status', app_id=app.id, status='Rejected') }}" class="btn btn-red">reject</a>
+                    {% elif app.status == 'Shortlisted' %}
+                    <a href="{{ url_for('update_app_status', app_id=app.id, status='Selected') }}" class="btn btn-green">select</a>
+                    <a href="{{ url_for('update_app_status', app_id=app.id, status='Rejected') }}" class="btn btn-red">reject</a>
+                    {% elif app.status == 'Selected' %}
+                    <span style="color: #20a020; font-weight: 600; font-size: 13px;">Selected</span>
+                    {% elif app.status == 'Rejected' %}
+                    <span style="color: #cc0000; font-weight: 600; font-size: 13px;">Rejected</span>
+                    {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p style="color:#999; font-size:14px;">no applications yet for this drive.</p>
+  {% endif %}
+
+</div>
+{% endblock %}
